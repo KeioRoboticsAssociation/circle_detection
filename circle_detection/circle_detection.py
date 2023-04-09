@@ -3,15 +3,27 @@ import numpy as np
 import math
 from rclpy.node import Node
 from geometry_msgs.msg import Twist
+from geometry_msgs.msg import Quaternion
 from sensor_msgs.msg import Joy
 from sensor_msgs.msg import LaserScan
 from nav_msgs.msg import Odometry
 
+
 from tf2_ros import transform_broadcaster
 from tf2_ros.buffer import Buffer
 from tf2_ros import transform_listener
+import math
+
 
 import circle_detection.submodules.circle_analyze as ca
+from dataclasses import dataclass
+
+
+@dataclass
+class pose:
+    x: float
+    y: float
+    theta: float
 
 
 class CircleDetector(Node):
@@ -20,7 +32,7 @@ class CircleDetector(Node):
         self.set_handles()
         self.set_arguments()
         self.timer = self.create_timer(0.05, self.update)
-        pass
+        self.robot_pose = pose(0, 0, 0)
 
     def set_handles(self):
         '''set publisher and subscriber'''
@@ -28,6 +40,8 @@ class CircleDetector(Node):
         self.scan_sub
         self.odom_sub = self.create_subscription(Odometry, 'odom', self.odom_callback, 10)
         self.odom_sub
+        self.tf_buffer = Buffer()
+        self.tf_listener = transform_listener.TransformListener(self.tf_buffer, self)
 
     def set_arguments(self):
         self.cartesian = []
@@ -79,12 +93,23 @@ class CircleDetector(Node):
 
     def get_current_pose(self):
         '''tf2から現在のロボットの座標を取得'''
-        
-        pass
-        
+        try:
+            t = self.tf_buffer.lookup_transform('map', 'base_link', rclpy.time.Time())
+            self.robot_pose.x = t.transform.translation.x
+            self.robot_pose.y = t.transform.translation.y
+            self.robot_pose.theta = math.atan2(2.0 * (t.transform.rotation.x*t.transform.rotation.y+t.transform.rotation.w*t.transform.rotation.z),
+                                               t.transform.rotation.w*t.transform.rotation.w+t.transform.rotation.x*t.transform.rotation.x-
+                                               t.transform.rotation.y*t.transform.rotation.y-t.transform.rotation.z*t.transform.rotation.z)
+            # yaw = atan2f((2.f * (q.getX() * q.getY() + q.getW() * q.getZ())),
+            #              (q.getW() * q.getW() + q.getX() * q.getX() -
+            #               q.getY() * q.getY() - q.getZ() * q.getZ()))
+
+        except Exception as e:
+            self.get_logger().info('tf2 error: {}'.format(e))
+
     def update(self):
         circles, lines = self.figure_detect(self.cartesian)
-        
+
         print("circle: ")
         print(circles)
         print("lines :")

@@ -1,10 +1,40 @@
-side_area:
-  - circles:
-      
-  - lines:
-angkor_area:
-  - circles:
-  - lines:
-centor_area:
-  - circles:
-  - lines:
+circles:
+  - name: 'type1_1'
+    place: [0.0,-0.5]
+    radius: 0.0508
+  - name: 'type1_2'
+    place: [0.0,0.5]
+    radius: 0.0508
+  # - name: 'type1_1'
+  #   place: [3.2,0.0]
+  #   radius: 0.0508
+  # - name: 'type1_2'
+  #   place: [3.2,3.2]
+  #   radius: 0.0508
+  # - name: 'type1_3'
+  #   place: [-3.2,3.2]
+  #   radius: 0.0508
+  # - name: 'type1_4'
+  #   place: [-3.2,0.0]
+  #   radius: 0.0508
+  # - name: 'type1_5'
+  #   place: [-3.2,-3.2]
+  #   radius: 0.0508
+  # - name: 'type1_6'
+  #   place: [3.2,-3.2]
+  #   radius: 0.0508
+  # - name: 'type2_1'
+  #   place: [1.3,1.3]
+  #   radius: 0.0508
+  # - name: 'type2_2'
+  #   place: [-1.3,1.3]
+  #   radius: 0.0508
+  # - name: 'type2_3'
+  #   place: [-1.3,-1.3]
+  #   radius: 0.0508
+  # - name: 'type2_4'
+  #   place: [1.3,-1.3]
+  #   radius: 0.0508
+  # - name: 'type3'
+  #   place: [0.0,0.0]
+  #   radius: 0.0699    
